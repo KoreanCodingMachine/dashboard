@@ -16,7 +16,12 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
-import { getRecentOrders, getRevenue } from '../../api';
+import {
+  getRecentOrders,
+  getRevenue,
+  getInventory,
+  getAllUsers,
+} from '../../api';
 
 ChartJS.register(
   CategoryScale,
@@ -28,6 +33,24 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
+  const [orders, setOrders] = useState(0);
+  const [inventory, setInventory] = useState(0);
+  const [customers, setCustomers] = useState(0);
+  const [revenue, setRevenue] = useState(0);
+
+  useEffect(() => {
+    getRecentOrders().then((res) => {
+      setOrders(res.total);
+      setRevenue(res.discountedTotal);
+    });
+    getInventory().then((res) => {
+      setInventory(res.total);
+    });
+    getAllUsers().then((res) => {
+      setCustomers(res.total);
+    });
+  }, []);
+
   return (
     <Space size={20} direction='vertical'>
       <Typography.Title level={4}>Dashboard</Typography.Title>
@@ -45,7 +68,7 @@ const Dashboard = () => {
             />
           }
           title={'Orders'}
-          value={12345}
+          value={orders}
         />
         <DashboardCard
           icon={
@@ -60,7 +83,7 @@ const Dashboard = () => {
             />
           }
           title={'Inventory'}
-          value={12345}
+          value={inventory}
         />
         <DashboardCard
           icon={
@@ -75,7 +98,7 @@ const Dashboard = () => {
             />
           }
           title={'Customer'}
-          value={12345}
+          value={customers}
         />
         <DashboardCard
           icon={
@@ -90,7 +113,7 @@ const Dashboard = () => {
             />
           }
           title={'Revenue'}
-          value={12345}
+          value={revenue}
         />
       </Space>
       <Space>
@@ -158,7 +181,6 @@ function DashBoardChart() {
 
   useEffect(() => {
     getRevenue().then((res) => {
-      console.log(res);
       const labels = res.carts.map((cart) => {
         return `User-${cart.userId}`;
       });

@@ -15,3 +15,9 @@ export const getInventory = async () => {
 export const getAllUsers = async () => {
   return await fetch('https://dummyjson.com/users').then((res) => res.json());
 };
+
+export const getComments = async () => {
+  return await fetch('https://dummyjson.com/comments').then((res) =>
+    res.json()
+  );
+};
