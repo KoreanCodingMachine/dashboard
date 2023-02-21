@@ -5,8 +5,27 @@ import {
   ShoppingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import React, { useState, useEffect } from 'react';
-import { getRecentOrders } from '../../api';
+import { getRecentOrders, getRevenue } from '../../api';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Dashboard = () => {
   return (
@@ -76,6 +95,7 @@ const Dashboard = () => {
       </Space>
       <Space>
         <RecentOrders />
+        <DashBoardChart />
       </Space>
     </Space>
   );
@@ -99,7 +119,6 @@ function RecentOrders() {
   useEffect(() => {
     setLoading(true);
     getRecentOrders().then((res) => {
-      console.log(res.products);
       setDataSource(res.products.splice(0, 3));
       setLoading(false);
     });
@@ -128,6 +147,67 @@ function RecentOrders() {
         pagination={false}
       ></Table>
     </>
+  );
+}
+
+function DashBoardChart() {
+  const [revenueData, setRevenueData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  useEffect(() => {
+    getRevenue().then((res) => {
+      console.log(res);
+      const labels = res.carts.map((cart) => {
+        return `User-${cart.userId}`;
+      });
+
+      const data = res.carts.map((cart) => {
+        return cart.discountedTotal;
+      });
+
+      const dataSource = {
+        labels,
+        datasets: [
+          {
+            label: 'Revenue',
+            data: data,
+            backgroundColor: 'rgba(255, 0, 0, 1)',
+          },
+        ],
+      };
+      setRevenueData(dataSource);
+    });
+  }, []);
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+      title: {
+        display: true,
+        text: 'Order Revenue',
+      },
+    },
+  };
+
+  const labels = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+  ];
+
+  return (
+    <Card style={{ width: 500, height: 250 }}>
+      <Bar options={options} data={revenueData} />
+    </Card>
   );
 }
 
