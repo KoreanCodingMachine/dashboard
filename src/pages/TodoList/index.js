@@ -6,6 +6,7 @@ import TodoListStats from '../../components/Todo/ToListStats';
 import TodoItem from '../../components/Todo/TodoItem';
 
 export default function TodoList() {
+  // 읽기 전용 리코일값
   const todoList = useRecoilValue(filteredTodoListState);
 
   return (

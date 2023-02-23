@@ -2,8 +2,12 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { todoListState } from '../../recoil/todo';
 
+// todo리스트의 값을 표시하는 동시에 텍스트를 변경하고 항목을 삭제한다.
+
 export default function TodoItem({ item }) {
   const [todoList, setTodoList] = useRecoilState(todoListState);
+
+  // todoList 배열에서 item 항목과 일치하는 인덱스를 찾는다.
   const index = todoList.findIndex((listItem) => listItem === item);
 
   const editItemText = ({ target: { value } }) => {

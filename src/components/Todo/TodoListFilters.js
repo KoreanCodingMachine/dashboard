@@ -2,6 +2,7 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { todoListFilterState } from '../../recoil/todo';
 
+// 필터링된 상태를 나타내는 컴포넌트
 export default function TodoListFilters() {
   const [filter, setFilter] = useRecoilState(todoListFilterState);
 

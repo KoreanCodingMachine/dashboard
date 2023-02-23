@@ -2,6 +2,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { todoListStatsState } from '../../recoil/todo';
 
+// todoList 정보를 나타내는 컴포넌트
 export default function TodoListStats() {
   const { totalNum, totalCompletedNum, totalUncompletedNum, percentCompleted } =
     useRecoilValue(todoListStatsState);
